@@ -1,0 +1,11 @@
+# This file contains pkgconfig build requirements that get picked up
+# but are undesirable. One entry per line, no whitespace.
+QtGui
+0.31.1
+QtTest
+icu-le-hb
+vdpau
+wayland-client
+libdrm_nouveau
+libdrm_radeon
+libgflags

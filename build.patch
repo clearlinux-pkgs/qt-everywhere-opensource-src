@@ -1,0 +1,20 @@
+--- qt-everywhere-opensource-src-5.6.0/qtbase/configure~	2016-03-03 11:35:22.000000000 +0000
++++ qt-everywhere-opensource-src-5.6.0/qtbase/configure	2016-04-14 03:44:11.355135829 +0000
+@@ -2352,7 +2352,6 @@
+     esac
+     if [ "$UNKNOWN_OPT" = "yes" ]; then
+         echo "${CURRENT_OPT}: invalid command-line switch"
+-        ERROR=yes
+     fi
+ done
+ [ "x$ERROR" = "xyes" ] && exit 1
+--- qt-everywhere-opensource-src-5.6.0/qtbase/configure~	2016-04-14 03:44:11.000000000 +0000
++++ qt-everywhere-opensource-src-5.6.0/qtbase/configure	2016-04-14 03:50:04.654913089 +0000
+@@ -1104,7 +1104,6 @@
+     esac
+     if [ "$UNKNOWN_ARG" = "yes" ]; then
+         echo "$1: unknown argument"
+-        ERROR=yes
+         shift
+         continue
+      fi

@@ -1,0 +1,21 @@
+# This file contains additional build requirements that did not get
+# picked up automatically. One name per line, no whitespace.
+icu4c-dev
+sqlite-autoconf-dev
+libxcb-dev
+dbus-dev
+openssl-dev
+pulseaudio-dev
+tiff-dev
+zlib-dev
+xcb-proto
+xcb-util
+fontconfig-dev
+harfbuzz-dev
+libjpeg-turbo-dev
+systemd-dev
+pcre-dev
+libxkbfile-dev
+cups-dev
+libXrender-dev
+alsa-lib-dev
