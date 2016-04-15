@@ -19,3 +19,4 @@ libxkbfile-dev
 cups-dev
 libXrender-dev
 alsa-lib-dev
+libxkbcommon-dev
