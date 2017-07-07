@@ -6,7 +6,6 @@ libxcb-dev
 dbus-dev
 openssl-dev
 pulseaudio-dev
-tiff-dev
 zlib-dev
 xcb-proto
 xcb-util

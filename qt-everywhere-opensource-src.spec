@@ -4,7 +4,7 @@
 #
 Name     : qt-everywhere-opensource-src
 Version  : 5.6.0
-Release  : 2
+Release  : 3
 URL      : http://download.qt.io/official_releases/qt/5.6/5.6.0/single/qt-everywhere-opensource-src-5.6.0.tar.gz
 Source0  : http://download.qt.io/official_releases/qt/5.6/5.6.0/single/qt-everywhere-opensource-src-5.6.0.tar.gz
 Summary  : A library of functions for manipulating MNG format files.
@@ -13,17 +13,28 @@ License  : AFL-2.0 APSL-2.0 Apache-2.0 BSD-2-Clause BSD-3-Clause BSD-3-Clause-Cl
 Requires: qt-everywhere-opensource-src-bin
 Requires: qt-everywhere-opensource-src-lib
 Requires: qt-everywhere-opensource-src-data
+Requires: Sphinx
+Requires: dnspython
+Requires: nose
+Requires: pyOpenSSL
+Requires: pylint
+Requires: python-mock
+Requires: setuptools
+Requires: tox
 BuildRequires : alsa-lib-dev
 BuildRequires : cmake
 BuildRequires : cups-dev
 BuildRequires : dbus-dev
+BuildRequires : dnspython
 BuildRequires : fontconfig-dev
+BuildRequires : go
 BuildRequires : grep
 BuildRequires : harfbuzz-dev
 BuildRequires : icu4c-dev
 BuildRequires : libXrender-dev
 BuildRequires : libjpeg-turbo-dev
 BuildRequires : libxcb-dev
+BuildRequires : libxkbcommon-dev
 BuildRequires : libxkbfile-dev
 BuildRequires : openssl-dev
 BuildRequires : pbr
@@ -35,6 +46,7 @@ BuildRequires : pkgconfig(freetype2)
 BuildRequires : pkgconfig(glproto)
 BuildRequires : pkgconfig(libdrm)
 BuildRequires : pkgconfig(libdrm_intel)
+BuildRequires : pkgconfig(libdrm_radeon)
 BuildRequires : pkgconfig(libkms)
 BuildRequires : pkgconfig(liblzma)
 BuildRequires : pkgconfig(libudev)
@@ -58,7 +70,6 @@ BuildRequires : sed
 BuildRequires : setuptools
 BuildRequires : sqlite-autoconf-dev
 BuildRequires : systemd-dev
-BuildRequires : tiff-dev
 BuildRequires : xcb-proto
 BuildRequires : xcb-util
 BuildRequires : zlib-dev
@@ -108,15 +119,20 @@ lib components for the qt-everywhere-opensource-src package.
 
 
 %prep
-cd ..
 %setup -q -n qt-everywhere-opensource-src-5.6.0
 %patch1 -p1
 
 %build
-%configure --disable-static -opensource -release -confirm-license -reduce-relocations -openssl  -system-sqlite -docdir /usr/share/doc -examplesdir /usr/share/doc/qt/examples -demosdir /usr/share/doc/qt/demos -qt-xcb -v -no-compile-examples
-make V=1
+export http_proxy=http://127.0.0.1:9/
+export https_proxy=http://127.0.0.1:9/
+export no_proxy=localhost,127.0.0.1,0.0.0.0
+export LANG=C
+export SOURCE_DATE_EPOCH=1499449152
+%configure --disable-static -opensource -release -confirm-license -reduce-relocations -openssl  -system-sqlite -docdir /usr/share/doc -examplesdir /usr/share/doc/qt/examples -qt-xcb -v -no-compile-examples
+make V=1  %{?_smp_mflags}
 
 %install
+export SOURCE_DATE_EPOCH=1499449152
 rm -rf %{buildroot}
 %make_install
 
@@ -167,9 +183,11 @@ rm -rf %{buildroot}
 /usr/lib64/cmake/Qt5Gui/Qt5GuiConfig.cmake
 /usr/lib64/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake
 /usr/lib64/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake
+/usr/lib64/cmake/Qt5Gui/Qt5Gui_.cmake
 /usr/lib64/cmake/Qt5Gui/Qt5Gui_QComposePlatformInputContextPlugin.cmake
 /usr/lib64/cmake/Qt5Gui/Qt5Gui_QDDSPlugin.cmake
 /usr/lib64/cmake/Qt5Gui/Qt5Gui_QEglFSIntegrationPlugin.cmake
+/usr/lib64/cmake/Qt5Gui/Qt5Gui_QEglFSKmsIntegrationPlugin.cmake
 /usr/lib64/cmake/Qt5Gui/Qt5Gui_QEglFSX11IntegrationPlugin.cmake
 /usr/lib64/cmake/Qt5Gui/Qt5Gui_QEvdevKeyboardPlugin.cmake
 /usr/lib64/cmake/Qt5Gui/Qt5Gui_QEvdevMousePlugin.cmake
@@ -255,11 +273,6 @@ rm -rf %{buildroot}
 /usr/lib64/cmake/Qt5Sensors/Qt5Sensors_QShakeSensorGesturePlugin.cmake
 /usr/lib64/cmake/Qt5Sensors/Qt5Sensors_QtSensorGesturePlugin.cmake
 /usr/lib64/cmake/Qt5Sensors/Qt5Sensors_genericSensorPlugin.cmake
-/usr/lib64/cmake/Qt5SerialBus/Qt5SerialBusConfig.cmake
-/usr/lib64/cmake/Qt5SerialBus/Qt5SerialBusConfigVersion.cmake
-/usr/lib64/cmake/Qt5SerialBus/Qt5SerialBus_PeakCanBusPlugin.cmake
-/usr/lib64/cmake/Qt5SerialBus/Qt5SerialBus_SocketCanBusPlugin.cmake
-/usr/lib64/cmake/Qt5SerialBus/Qt5SerialBus_TinyCanBusPlugin.cmake
 /usr/lib64/cmake/Qt5SerialPort/Qt5SerialPortConfig.cmake
 /usr/lib64/cmake/Qt5SerialPort/Qt5SerialPortConfigVersion.cmake
 /usr/lib64/cmake/Qt5Sql/Qt5SqlConfig.cmake
@@ -275,6 +288,9 @@ rm -rf %{buildroot}
 /usr/lib64/cmake/Qt5UiPlugin/Qt5UiPluginConfigVersion.cmake
 /usr/lib64/cmake/Qt5UiTools/Qt5UiToolsConfig.cmake
 /usr/lib64/cmake/Qt5UiTools/Qt5UiToolsConfigVersion.cmake
+/usr/lib64/cmake/Qt5WaylandClient/Qt5WaylandClientConfig.cmake
+/usr/lib64/cmake/Qt5WaylandClient/Qt5WaylandClientConfigVersion.cmake
+/usr/lib64/cmake/Qt5WaylandClient/Qt5WaylandClient_.cmake
 /usr/lib64/cmake/Qt5WebChannel/Qt5WebChannelConfig.cmake
 /usr/lib64/cmake/Qt5WebChannel/Qt5WebChannelConfigVersion.cmake
 /usr/lib64/cmake/Qt5WebSockets/Qt5WebSocketsConfig.cmake
@@ -330,12 +346,12 @@ rm -rf %{buildroot}
 /usr/lib64/libQt5Script.prl
 /usr/lib64/libQt5ScriptTools.prl
 /usr/lib64/libQt5Sensors.prl
-/usr/lib64/libQt5SerialBus.prl
 /usr/lib64/libQt5SerialPort.prl
 /usr/lib64/libQt5Sql.prl
 /usr/lib64/libQt5Svg.prl
 /usr/lib64/libQt5Test.prl
 /usr/lib64/libQt5UiTools.prl
+/usr/lib64/libQt5WaylandClient.prl
 /usr/lib64/libQt5WebChannel.prl
 /usr/lib64/libQt5WebSockets.prl
 /usr/lib64/libQt5Widgets.prl
@@ -779,8 +795,6 @@ rm -rf %{buildroot}
 /usr/mkspecs/modules/qt_lib_scripttools_private.pri
 /usr/mkspecs/modules/qt_lib_sensors.pri
 /usr/mkspecs/modules/qt_lib_sensors_private.pri
-/usr/mkspecs/modules/qt_lib_serialbus.pri
-/usr/mkspecs/modules/qt_lib_serialbus_private.pri
 /usr/mkspecs/modules/qt_lib_serialport.pri
 /usr/mkspecs/modules/qt_lib_serialport_private.pri
 /usr/mkspecs/modules/qt_lib_sql.pri
@@ -792,6 +806,8 @@ rm -rf %{buildroot}
 /usr/mkspecs/modules/qt_lib_uiplugin.pri
 /usr/mkspecs/modules/qt_lib_uitools.pri
 /usr/mkspecs/modules/qt_lib_uitools_private.pri
+/usr/mkspecs/modules/qt_lib_waylandclient.pri
+/usr/mkspecs/modules/qt_lib_waylandclient_private.pri
 /usr/mkspecs/modules/qt_lib_webchannel.pri
 /usr/mkspecs/modules/qt_lib_webchannel_private.pri
 /usr/mkspecs/modules/qt_lib_websockets.pri
@@ -912,10 +928,8 @@ rm -rf %{buildroot}
 /usr/plugins/bearer/libqconnmanbearer.so
 /usr/plugins/bearer/libqgenericbearer.so
 /usr/plugins/bearer/libqnmbearer.so
-/usr/plugins/canbus/libqtpeakcanbus.so
-/usr/plugins/canbus/libqtsocketcanbus.so
-/usr/plugins/canbus/libqttinycanbus.so
 /usr/plugins/designer/libqquickwidget.so
+/usr/plugins/egldeviceintegrations/libqeglfs-kms-integration.so
 /usr/plugins/egldeviceintegrations/libqeglfs-x11-integration.so
 /usr/plugins/generic/libqevdevkeyboardplugin.so
 /usr/plugins/generic/libqevdevmouseplugin.so
@@ -944,6 +958,8 @@ rm -rf %{buildroot}
 /usr/plugins/platforms/libqminimal.so
 /usr/plugins/platforms/libqminimalegl.so
 /usr/plugins/platforms/libqoffscreen.so
+/usr/plugins/platforms/libqwayland-egl.so
+/usr/plugins/platforms/libqwayland-generic.so
 /usr/plugins/platforms/libqxcb.so
 /usr/plugins/playlistformats/libqtmultimedia_m3u.so
 /usr/plugins/position/libqtposition_geoclue.so
@@ -964,6 +980,9 @@ rm -rf %{buildroot}
 /usr/plugins/sensors/libqtsensors_generic.so
 /usr/plugins/sensors/libqtsensors_linuxsys.so
 /usr/plugins/sqldrivers/libqsqlite.so
+/usr/plugins/wayland-decoration-client/libbradient.so
+/usr/plugins/wayland-graphics-integration-client/libdrm-egl-server.so
+/usr/plugins/wayland-graphics-integration-client/libwayland-egl.so
 /usr/plugins/xcbglintegrations/libqxcb-egl-integration.so
 /usr/plugins/xcbglintegrations/libqxcb-glx-integration.so
 /usr/qml/Enginio/libenginioplugin.so
@@ -1438,7 +1457,6 @@ rm -rf %{buildroot}
 %files bin
 %defattr(-,root,root,-)
 /usr/bin/assistant
-/usr/bin/canbusutil
 /usr/bin/designer
 /usr/bin/fixqt4headers.pl
 /usr/bin/lconvert
@@ -1470,7 +1488,8 @@ rm -rf %{buildroot}
 /usr/bin/qtdiag
 /usr/bin/qtpaths
 /usr/bin/qtplugininfo
-/usr/bin/rcc
+/usr/bin/qtwaylandscanner
+%exclude /usr/bin/rcc
 /usr/bin/syncqt.pl
 /usr/bin/uic
 /usr/bin/xmlpatterns
@@ -2936,6 +2955,7 @@ rm -rf %{buildroot}
 /usr/share/doc/qt/examples/qt3d/anaglyph-rendering/anaglyph-rendering
 /usr/share/doc/qt/examples/qt3d/assimp-cpp/assimp-cpp
 /usr/share/doc/qt/examples/qt3d/assimp/assimp
+/usr/share/doc/qt/examples/qt3d/audio-visualizer-qml/audio-visualizer-qml
 /usr/share/doc/qt/examples/qt3d/basicshapes-cpp/basicshapes-cpp
 /usr/share/doc/qt/examples/qt3d/bigmodel-qml/bigmodel-qml
 /usr/share/doc/qt/examples/qt3d/bigscene-cpp/bigscene-cpp
@@ -10121,54 +10141,6 @@ rm -rf %{buildroot}
 /usr/include/QtSensors/qtapsensor.h
 /usr/include/QtSensors/qtiltsensor.h
 /usr/include/QtSensors/qtsensorsversion.h
-/usr/include/QtSerialBus/5.6.0/QtSerialBus/private/qcanbusdevice_p.h
-/usr/include/QtSerialBus/5.6.0/QtSerialBus/private/qmodbus_symbols_p.h
-/usr/include/QtSerialBus/5.6.0/QtSerialBus/private/qmodbusadu_p.h
-/usr/include/QtSerialBus/5.6.0/QtSerialBus/private/qmodbusclient_p.h
-/usr/include/QtSerialBus/5.6.0/QtSerialBus/private/qmodbuscommevent_p.h
-/usr/include/QtSerialBus/5.6.0/QtSerialBus/private/qmodbusdevice_p.h
-/usr/include/QtSerialBus/5.6.0/QtSerialBus/private/qmodbusrtuserialmaster_p.h
-/usr/include/QtSerialBus/5.6.0/QtSerialBus/private/qmodbusrtuserialslave_p.h
-/usr/include/QtSerialBus/5.6.0/QtSerialBus/private/qmodbusserver_p.h
-/usr/include/QtSerialBus/5.6.0/QtSerialBus/private/qmodbustcpclient_p.h
-/usr/include/QtSerialBus/5.6.0/QtSerialBus/private/qmodbustcpserver_p.h
-/usr/include/QtSerialBus/QCanBus
-/usr/include/QtSerialBus/QCanBusDevice
-/usr/include/QtSerialBus/QCanBusFactory
-/usr/include/QtSerialBus/QCanBusFrame
-/usr/include/QtSerialBus/QModbusClient
-/usr/include/QtSerialBus/QModbusDataUnit
-/usr/include/QtSerialBus/QModbusDataUnitMap
-/usr/include/QtSerialBus/QModbusDevice
-/usr/include/QtSerialBus/QModbusExceptionResponse
-/usr/include/QtSerialBus/QModbusPdu
-/usr/include/QtSerialBus/QModbusReply
-/usr/include/QtSerialBus/QModbusRequest
-/usr/include/QtSerialBus/QModbusResponse
-/usr/include/QtSerialBus/QModbusRtuSerialMaster
-/usr/include/QtSerialBus/QModbusRtuSerialSlave
-/usr/include/QtSerialBus/QModbusServer
-/usr/include/QtSerialBus/QModbusTcpClient
-/usr/include/QtSerialBus/QModbusTcpServer
-/usr/include/QtSerialBus/QtSerialBus
-/usr/include/QtSerialBus/QtSerialBusDepends
-/usr/include/QtSerialBus/QtSerialBusVersion
-/usr/include/QtSerialBus/qcanbus.h
-/usr/include/QtSerialBus/qcanbusdevice.h
-/usr/include/QtSerialBus/qcanbusfactory.h
-/usr/include/QtSerialBus/qcanbusframe.h
-/usr/include/QtSerialBus/qmodbusclient.h
-/usr/include/QtSerialBus/qmodbusdataunit.h
-/usr/include/QtSerialBus/qmodbusdevice.h
-/usr/include/QtSerialBus/qmodbuspdu.h
-/usr/include/QtSerialBus/qmodbusreply.h
-/usr/include/QtSerialBus/qmodbusrtuserialmaster.h
-/usr/include/QtSerialBus/qmodbusrtuserialslave.h
-/usr/include/QtSerialBus/qmodbusserver.h
-/usr/include/QtSerialBus/qmodbustcpclient.h
-/usr/include/QtSerialBus/qmodbustcpserver.h
-/usr/include/QtSerialBus/qserialbusglobal.h
-/usr/include/QtSerialBus/qtserialbusversion.h
 /usr/include/QtSerialPort/5.6.0/QtSerialPort/private/qserialport_p.h
 /usr/include/QtSerialPort/5.6.0/QtSerialPort/private/qserialportinfo_p.h
 /usr/include/QtSerialPort/5.6.0/QtSerialPort/private/qtudev_p.h
@@ -10332,6 +10304,73 @@ rm -rf %{buildroot}
 /usr/include/QtUiTools/QtUiToolsVersion
 /usr/include/QtUiTools/qtuitoolsversion.h
 /usr/include/QtUiTools/quiloader.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwayland-hardware-integration.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwayland-qtkey-extension.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwayland-server-buffer-extension.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwayland-sub-surface-extension.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwayland-surface-extension.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwayland-text.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwayland-touch-extension.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwayland-wayland.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwayland-windowmanager.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwayland-xdg-shell.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandabstractdecoration_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandbuffer_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandclientbufferintegration_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandclientbufferintegrationfactory_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandclientbufferintegrationplugin_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandclientexport_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandclipboard_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandcursor_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylanddatadevice_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylanddatadevicemanager_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylanddataoffer_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylanddatasource_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylanddecorationfactory_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylanddecorationplugin_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylanddisplay_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylanddnd_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandextendedsurface_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandhardwareintegration_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandinputcontext_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandinputdevice_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandinputdeviceintegration_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandinputdeviceintegrationfactory_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandinputdeviceintegrationplugin_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandintegration_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandnativeinterface_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandqtkey_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandscreen_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandserverbufferintegration_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandserverbufferintegrationfactory_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandserverbufferintegrationplugin_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandshellintegration_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandshellintegrationfactory_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandshellintegrationplugin_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandshellsurface_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandshmbackingstore_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandshmwindow_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandsubsurface_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandtouch_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandwindow_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandwindowmanagerintegration_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandwlshellsurface_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandxdgshell_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/qwaylandxdgsurface_p.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/wayland-hardware-integration-client-protocol.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/wayland-qtkey-extension-client-protocol.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/wayland-server-buffer-extension-client-protocol.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/wayland-sub-surface-extension-client-protocol.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/wayland-surface-extension-client-protocol.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/wayland-text-client-protocol.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/wayland-touch-extension-client-protocol.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/wayland-wayland-client-protocol.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/wayland-windowmanager-client-protocol.h
+/usr/include/QtWaylandClient/5.6.0/QtWaylandClient/private/wayland-xdg-shell-client-protocol.h
+/usr/include/QtWaylandClient/QtWaylandClient
+/usr/include/QtWaylandClient/QtWaylandClientDepends
+/usr/include/QtWaylandClient/QtWaylandClientVersion
+/usr/include/QtWaylandClient/qtwaylandclientversion.h
 /usr/include/QtWebChannel/5.6.0/QtWebChannel/private/qmetaobjectpublisher_p.h
 /usr/include/QtWebChannel/5.6.0/QtWebChannel/private/qqmlwebchannelattached_p.h
 /usr/include/QtWebChannel/5.6.0/QtWebChannel/private/qwebchannel_p.h
@@ -11308,9 +11347,241 @@ rm -rf %{buildroot}
 /usr/include/QtXmlPatterns/qxmlschema.h
 /usr/include/QtXmlPatterns/qxmlschemavalidator.h
 /usr/include/QtXmlPatterns/qxmlserializer.h
-/usr/lib64/*.so
-/usr/lib64/pkgconfig/*.pc
+/usr/lib64/libEnginio.so
+/usr/lib64/libQt53DCore.so
+/usr/lib64/libQt53DInput.so
+/usr/lib64/libQt53DLogic.so
+/usr/lib64/libQt53DQuick.so
+/usr/lib64/libQt53DQuickInput.so
+/usr/lib64/libQt53DQuickRender.so
+/usr/lib64/libQt53DRender.so
+/usr/lib64/libQt5Bluetooth.so
+/usr/lib64/libQt5CLucene.so
+/usr/lib64/libQt5Concurrent.so
+/usr/lib64/libQt5Core.so
+/usr/lib64/libQt5DBus.so
+/usr/lib64/libQt5Designer.so
+/usr/lib64/libQt5DesignerComponents.so
+/usr/lib64/libQt5EglDeviceIntegration.so
+/usr/lib64/libQt5Gui.so
+/usr/lib64/libQt5Help.so
+/usr/lib64/libQt5LabsTemplates.so
+/usr/lib64/libQt5Location.so
+/usr/lib64/libQt5Multimedia.so
+/usr/lib64/libQt5MultimediaQuick_p.so
+/usr/lib64/libQt5MultimediaWidgets.so
+/usr/lib64/libQt5Network.so
+/usr/lib64/libQt5Nfc.so
+/usr/lib64/libQt5OpenGL.so
+/usr/lib64/libQt5Positioning.so
+/usr/lib64/libQt5PrintSupport.so
+/usr/lib64/libQt5Qml.so
+/usr/lib64/libQt5Quick.so
+/usr/lib64/libQt5QuickParticles.so
+/usr/lib64/libQt5QuickTest.so
+/usr/lib64/libQt5QuickWidgets.so
+/usr/lib64/libQt5Script.so
+/usr/lib64/libQt5ScriptTools.so
+/usr/lib64/libQt5Sensors.so
+/usr/lib64/libQt5SerialPort.so
+/usr/lib64/libQt5Sql.so
+/usr/lib64/libQt5Svg.so
+/usr/lib64/libQt5Test.so
+/usr/lib64/libQt5WaylandClient.so
+/usr/lib64/libQt5WebChannel.so
+/usr/lib64/libQt5WebSockets.so
+/usr/lib64/libQt5Widgets.so
+/usr/lib64/libQt5X11Extras.so
+/usr/lib64/libQt5XcbQpa.so
+/usr/lib64/libQt5Xml.so
+/usr/lib64/libQt5XmlPatterns.so
+/usr/lib64/pkgconfig/Enginio.pc
+/usr/lib64/pkgconfig/Qt53DCore.pc
+/usr/lib64/pkgconfig/Qt53DInput.pc
+/usr/lib64/pkgconfig/Qt53DLogic.pc
+/usr/lib64/pkgconfig/Qt53DQuick.pc
+/usr/lib64/pkgconfig/Qt53DQuickInput.pc
+/usr/lib64/pkgconfig/Qt53DQuickRender.pc
+/usr/lib64/pkgconfig/Qt53DRender.pc
+/usr/lib64/pkgconfig/Qt5Bluetooth.pc
+/usr/lib64/pkgconfig/Qt5Concurrent.pc
+/usr/lib64/pkgconfig/Qt5Core.pc
+/usr/lib64/pkgconfig/Qt5DBus.pc
+/usr/lib64/pkgconfig/Qt5Designer.pc
+/usr/lib64/pkgconfig/Qt5Gui.pc
+/usr/lib64/pkgconfig/Qt5Help.pc
+/usr/lib64/pkgconfig/Qt5Location.pc
+/usr/lib64/pkgconfig/Qt5Multimedia.pc
+/usr/lib64/pkgconfig/Qt5MultimediaWidgets.pc
+/usr/lib64/pkgconfig/Qt5Network.pc
+/usr/lib64/pkgconfig/Qt5Nfc.pc
+/usr/lib64/pkgconfig/Qt5OpenGL.pc
+/usr/lib64/pkgconfig/Qt5OpenGLExtensions.pc
+/usr/lib64/pkgconfig/Qt5Positioning.pc
+/usr/lib64/pkgconfig/Qt5PrintSupport.pc
+/usr/lib64/pkgconfig/Qt5Qml.pc
+/usr/lib64/pkgconfig/Qt5Quick.pc
+/usr/lib64/pkgconfig/Qt5QuickTest.pc
+/usr/lib64/pkgconfig/Qt5QuickWidgets.pc
+/usr/lib64/pkgconfig/Qt5Script.pc
+/usr/lib64/pkgconfig/Qt5ScriptTools.pc
+/usr/lib64/pkgconfig/Qt5Sensors.pc
+/usr/lib64/pkgconfig/Qt5SerialPort.pc
+/usr/lib64/pkgconfig/Qt5Sql.pc
+/usr/lib64/pkgconfig/Qt5Svg.pc
+/usr/lib64/pkgconfig/Qt5Test.pc
+/usr/lib64/pkgconfig/Qt5UiTools.pc
+/usr/lib64/pkgconfig/Qt5WaylandClient.pc
+/usr/lib64/pkgconfig/Qt5WebChannel.pc
+/usr/lib64/pkgconfig/Qt5WebSockets.pc
+/usr/lib64/pkgconfig/Qt5Widgets.pc
+/usr/lib64/pkgconfig/Qt5X11Extras.pc
+/usr/lib64/pkgconfig/Qt5Xml.pc
+/usr/lib64/pkgconfig/Qt5XmlPatterns.pc
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/*.so.*
+/usr/lib64/libEnginio.so.1
+/usr/lib64/libEnginio.so.1.6
+/usr/lib64/libEnginio.so.1.6.0
+/usr/lib64/libQt53DCore.so.5
+/usr/lib64/libQt53DCore.so.5.6
+/usr/lib64/libQt53DCore.so.5.6.0
+/usr/lib64/libQt53DInput.so.5
+/usr/lib64/libQt53DInput.so.5.6
+/usr/lib64/libQt53DInput.so.5.6.0
+/usr/lib64/libQt53DLogic.so.5
+/usr/lib64/libQt53DLogic.so.5.6
+/usr/lib64/libQt53DLogic.so.5.6.0
+/usr/lib64/libQt53DQuick.so.5
+/usr/lib64/libQt53DQuick.so.5.6
+/usr/lib64/libQt53DQuick.so.5.6.0
+/usr/lib64/libQt53DQuickInput.so.5
+/usr/lib64/libQt53DQuickInput.so.5.6
+/usr/lib64/libQt53DQuickInput.so.5.6.0
+/usr/lib64/libQt53DQuickRender.so.5
+/usr/lib64/libQt53DQuickRender.so.5.6
+/usr/lib64/libQt53DQuickRender.so.5.6.0
+/usr/lib64/libQt53DRender.so.5
+/usr/lib64/libQt53DRender.so.5.6
+/usr/lib64/libQt53DRender.so.5.6.0
+/usr/lib64/libQt5Bluetooth.so.5
+/usr/lib64/libQt5Bluetooth.so.5.6
+/usr/lib64/libQt5Bluetooth.so.5.6.0
+/usr/lib64/libQt5CLucene.so.5
+/usr/lib64/libQt5CLucene.so.5.6
+/usr/lib64/libQt5CLucene.so.5.6.0
+/usr/lib64/libQt5Concurrent.so.5
+/usr/lib64/libQt5Concurrent.so.5.6
+/usr/lib64/libQt5Concurrent.so.5.6.0
+/usr/lib64/libQt5Core.so.5
+/usr/lib64/libQt5Core.so.5.6
+/usr/lib64/libQt5Core.so.5.6.0
+/usr/lib64/libQt5DBus.so.5
+/usr/lib64/libQt5DBus.so.5.6
+/usr/lib64/libQt5DBus.so.5.6.0
+/usr/lib64/libQt5Designer.so.5
+/usr/lib64/libQt5Designer.so.5.6
+/usr/lib64/libQt5Designer.so.5.6.0
+/usr/lib64/libQt5DesignerComponents.so.5
+/usr/lib64/libQt5DesignerComponents.so.5.6
+/usr/lib64/libQt5DesignerComponents.so.5.6.0
+/usr/lib64/libQt5EglDeviceIntegration.so.5
+/usr/lib64/libQt5EglDeviceIntegration.so.5.6
+/usr/lib64/libQt5EglDeviceIntegration.so.5.6.0
+/usr/lib64/libQt5Gui.so.5
+/usr/lib64/libQt5Gui.so.5.6
+/usr/lib64/libQt5Gui.so.5.6.0
+/usr/lib64/libQt5Help.so.5
+/usr/lib64/libQt5Help.so.5.6
+/usr/lib64/libQt5Help.so.5.6.0
+/usr/lib64/libQt5LabsTemplates.so.5
+/usr/lib64/libQt5LabsTemplates.so.5.6
+/usr/lib64/libQt5LabsTemplates.so.5.6.0
+/usr/lib64/libQt5Location.so.5
+/usr/lib64/libQt5Location.so.5.6
+/usr/lib64/libQt5Location.so.5.6.0
+/usr/lib64/libQt5Multimedia.so.5
+/usr/lib64/libQt5Multimedia.so.5.6
+/usr/lib64/libQt5Multimedia.so.5.6.0
+/usr/lib64/libQt5MultimediaQuick_p.so.5
+/usr/lib64/libQt5MultimediaQuick_p.so.5.6
+/usr/lib64/libQt5MultimediaQuick_p.so.5.6.0
+/usr/lib64/libQt5MultimediaWidgets.so.5
+/usr/lib64/libQt5MultimediaWidgets.so.5.6
+/usr/lib64/libQt5MultimediaWidgets.so.5.6.0
+/usr/lib64/libQt5Network.so.5
+/usr/lib64/libQt5Network.so.5.6
+/usr/lib64/libQt5Network.so.5.6.0
+/usr/lib64/libQt5Nfc.so.5
+/usr/lib64/libQt5Nfc.so.5.6
+/usr/lib64/libQt5Nfc.so.5.6.0
+/usr/lib64/libQt5OpenGL.so.5
+/usr/lib64/libQt5OpenGL.so.5.6
+/usr/lib64/libQt5OpenGL.so.5.6.0
+/usr/lib64/libQt5Positioning.so.5
+/usr/lib64/libQt5Positioning.so.5.6
+/usr/lib64/libQt5Positioning.so.5.6.0
+/usr/lib64/libQt5PrintSupport.so.5
+/usr/lib64/libQt5PrintSupport.so.5.6
+/usr/lib64/libQt5PrintSupport.so.5.6.0
+/usr/lib64/libQt5Qml.so.5
+/usr/lib64/libQt5Qml.so.5.6
+/usr/lib64/libQt5Qml.so.5.6.0
+/usr/lib64/libQt5Quick.so.5
+/usr/lib64/libQt5Quick.so.5.6
+/usr/lib64/libQt5Quick.so.5.6.0
+/usr/lib64/libQt5QuickParticles.so.5
+/usr/lib64/libQt5QuickParticles.so.5.6
+/usr/lib64/libQt5QuickParticles.so.5.6.0
+/usr/lib64/libQt5QuickTest.so.5
+/usr/lib64/libQt5QuickTest.so.5.6
+/usr/lib64/libQt5QuickTest.so.5.6.0
+/usr/lib64/libQt5QuickWidgets.so.5
+/usr/lib64/libQt5QuickWidgets.so.5.6
+/usr/lib64/libQt5QuickWidgets.so.5.6.0
+/usr/lib64/libQt5Script.so.5
+/usr/lib64/libQt5Script.so.5.6
+/usr/lib64/libQt5Script.so.5.6.0
+/usr/lib64/libQt5ScriptTools.so.5
+/usr/lib64/libQt5ScriptTools.so.5.6
+/usr/lib64/libQt5ScriptTools.so.5.6.0
+/usr/lib64/libQt5Sensors.so.5
+/usr/lib64/libQt5Sensors.so.5.6
+/usr/lib64/libQt5Sensors.so.5.6.0
+/usr/lib64/libQt5SerialPort.so.5
+/usr/lib64/libQt5SerialPort.so.5.6
+/usr/lib64/libQt5SerialPort.so.5.6.0
+/usr/lib64/libQt5Sql.so.5
+/usr/lib64/libQt5Sql.so.5.6
+/usr/lib64/libQt5Sql.so.5.6.0
+/usr/lib64/libQt5Svg.so.5
+/usr/lib64/libQt5Svg.so.5.6
+/usr/lib64/libQt5Svg.so.5.6.0
+/usr/lib64/libQt5Test.so.5
+/usr/lib64/libQt5Test.so.5.6
+/usr/lib64/libQt5Test.so.5.6.0
+/usr/lib64/libQt5WaylandClient.so.5
+/usr/lib64/libQt5WaylandClient.so.5.6
+/usr/lib64/libQt5WaylandClient.so.5.6.0
+/usr/lib64/libQt5WebChannel.so.5
+/usr/lib64/libQt5WebChannel.so.5.6
+/usr/lib64/libQt5WebChannel.so.5.6.0
+/usr/lib64/libQt5WebSockets.so.5
+/usr/lib64/libQt5WebSockets.so.5.6
+/usr/lib64/libQt5WebSockets.so.5.6.0
+/usr/lib64/libQt5Widgets.so.5
+/usr/lib64/libQt5Widgets.so.5.6
+/usr/lib64/libQt5Widgets.so.5.6.0
+/usr/lib64/libQt5X11Extras.so.5
+/usr/lib64/libQt5X11Extras.so.5.6
+/usr/lib64/libQt5X11Extras.so.5.6.0
+/usr/lib64/libQt5XcbQpa.so.5
+/usr/lib64/libQt5XcbQpa.so.5.6
+/usr/lib64/libQt5XcbQpa.so.5.6.0
+/usr/lib64/libQt5Xml.so.5
+/usr/lib64/libQt5Xml.so.5.6
+/usr/lib64/libQt5Xml.so.5.6.0
+/usr/lib64/libQt5XmlPatterns.so.5
+/usr/lib64/libQt5XmlPatterns.so.5.6
+/usr/lib64/libQt5XmlPatterns.so.5.6.0

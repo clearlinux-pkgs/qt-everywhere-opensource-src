@@ -7,5 +7,4 @@ icu-le-hb
 vdpau
 wayland-client
 libdrm_nouveau
-libdrm_radeon
 libgflags
