@@ -4,7 +4,7 @@
 #
 Name     : qt-everywhere-opensource-src
 Version  : 5.6.0
-Release  : 3
+Release  : 4
 URL      : http://download.qt.io/official_releases/qt/5.6/5.6.0/single/qt-everywhere-opensource-src-5.6.0.tar.gz
 Source0  : http://download.qt.io/official_releases/qt/5.6/5.6.0/single/qt-everywhere-opensource-src-5.6.0.tar.gz
 Summary  : A library of functions for manipulating MNG format files.
@@ -1489,7 +1489,7 @@ rm -rf %{buildroot}
 /usr/bin/qtpaths
 /usr/bin/qtplugininfo
 /usr/bin/qtwaylandscanner
-%exclude /usr/bin/rcc
+/usr/bin/rcc
 /usr/bin/syncqt.pl
 /usr/bin/uic
 /usr/bin/xmlpatterns
