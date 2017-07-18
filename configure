@@ -1,1 +1,1 @@
- -opensource -release -confirm-license -reduce-relocations -openssl  -system-sqlite -docdir /usr/share/doc -examplesdir /usr/share/doc/qt/examples -qt-xcb -v -no-compile-examples
+ -opensource -release -confirm-license -reduce-relocations -openssl  -system-sqlite -docdir /usr/share/doc -examplesdir /usr/share/doc/qt/examples -qt-xcb -v -no-compile-examples -nomake examples

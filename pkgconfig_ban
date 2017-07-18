@@ -8,3 +8,4 @@ vdpau
 wayland-client
 libdrm_nouveau
 libgflags
+0.4.1

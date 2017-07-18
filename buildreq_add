@@ -19,3 +19,8 @@ cups-dev
 libXrender-dev
 alsa-lib-dev
 libxkbcommon-dev
+wayland-dev
+wayland-protocols-dev
+bluez-dev
+libXcomposite-dev
+
