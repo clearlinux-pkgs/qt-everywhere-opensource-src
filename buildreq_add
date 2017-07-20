@@ -23,4 +23,11 @@ wayland-dev
 wayland-protocols-dev
 bluez-dev
 libXcomposite-dev
-
+pcre2-dev
+gstreamer-dev
+libxcb-dev
+xcb-proto-dev
+double-conversion-dev
+libICE-dev
+libSM-dev
+gst-plugins-base-dev

@@ -1,0 +1,30 @@
+From 692a888498da13d85d814be462b6d2612b2721bc Mon Sep 17 00:00:00 2001
+From: Thiago Macieira <thiago.macieira@intel.com>
+Date: Wed, 19 Jul 2017 17:13:48 -0700
+Subject: [PATCH 1/1] Fix build: src/plugins/sceneparsers/assimp depends on
+ Qt3DAnimation
+
+ /usr/bin/ld.gold: error: cannot find -lQt53DAnimation
+ assimpimporter.o:assimpimporter.cpp:function Qt3DRender::AssimpImporter::node(aiNode*): error:
+ undefined reference to 'Qt3DAnimation::QKeyframeAnimation::setTarget(Qt3DCore::QTransform*)'
+
+Change-Id: I84e45059a888497fb55ffffd14d2e19ea52ecf55
+---
+ src/src.pro | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/src.pro b/src/src.pro
+index 46c205849..a965d7946 100644
+--- a/qt3d/src/src.pro
++++ b/qt3d/src/src.pro
+@@ -86,7 +86,7 @@ qtHaveModule(quick) {
+ # Qt3D Scene Parser plugins
+ src_plugins_sceneparsers.file = $$PWD/plugins/sceneparsers/sceneparsers.pro
+ src_plugins_sceneparsers.target = sub-plugins-sceneparsers
+-src_plugins_sceneparsers.depends = src_render src_extras
++src_plugins_sceneparsers.depends = src_render src_extras src_animation
+ 
+ # Qt3D Geometry Loader plugins
+ src_plugins_geometryloaders.file = $$PWD/plugins/geometryloaders/geometryloaders.pro
+-- 
+2.13.2

@@ -4,7 +4,7 @@
 #
 Name     : qt-everywhere-opensource-src
 Version  : 5.9.1
-Release  : 4
+Release  : 5
 URL      : http://download.qt.io/official_releases/qt/5.9/5.9.1/single/qt-everywhere-opensource-src-5.9.1.tar.xz
 Source0  : http://download.qt.io/official_releases/qt/5.9/5.9.1/single/qt-everywhere-opensource-src-5.9.1.tar.xz
 Summary  : Ninja is a small build system with a focus on speed.
@@ -33,11 +33,16 @@ BuildRequires : cmake
 BuildRequires : cups-dev
 BuildRequires : dbus-dev
 BuildRequires : dnspython
+BuildRequires : double-conversion-dev
 BuildRequires : fontconfig-dev
 BuildRequires : go
 BuildRequires : grep
+BuildRequires : gst-plugins-base-dev
+BuildRequires : gstreamer-dev
 BuildRequires : harfbuzz-dev
 BuildRequires : icu4c-dev
+BuildRequires : libICE-dev
+BuildRequires : libSM-dev
 BuildRequires : libXcomposite-dev
 BuildRequires : libXrender-dev
 BuildRequires : libjpeg-turbo-dev
@@ -47,6 +52,7 @@ BuildRequires : libxkbfile-dev
 BuildRequires : openssl-dev
 BuildRequires : pbr
 BuildRequires : pcre-dev
+BuildRequires : pcre2-dev
 BuildRequires : pip
 BuildRequires : pkgconfig(dri2proto)
 BuildRequires : pkgconfig(expat)
@@ -88,9 +94,11 @@ BuildRequires : systemd-dev
 BuildRequires : wayland-dev
 BuildRequires : wayland-protocols-dev
 BuildRequires : xcb-proto
+BuildRequires : xcb-proto-dev
 BuildRequires : xcb-util
 BuildRequires : zlib-dev
 Patch1: build.patch
+Patch2: assimp.patch
 
 %description
 Ninja is yet another build system. It takes as input the interdependencies of files (typically source code and output executables) and
@@ -141,18 +149,19 @@ lib components for the qt-everywhere-opensource-src package.
 %prep
 %setup -q -n qt-everywhere-opensource-src-5.9.1
 %patch1 -p1
+%patch2 -p1
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1500417875
+export SOURCE_DATE_EPOCH=1500513090
 %configure --disable-static -opensource -release -confirm-license -reduce-relocations -openssl  -system-sqlite -docdir /usr/share/doc -examplesdir /usr/share/doc/qt/examples -qt-xcb -v -no-compile-examples -nomake examples
 make V=1  %{?_smp_mflags}
 
 %install
-export SOURCE_DATE_EPOCH=1500417875
+export SOURCE_DATE_EPOCH=1500513090
 rm -rf %{buildroot}
 %make_install
 
@@ -267,8 +276,11 @@ rm -rf %{buildroot}
 /usr/lib64/cmake/Qt5Location/Qt5Location_QGeoServiceProviderFactoryOsm.cmake
 /usr/lib64/cmake/Qt5Multimedia/Qt5MultimediaConfig.cmake
 /usr/lib64/cmake/Qt5Multimedia/Qt5MultimediaConfigVersion.cmake
-/usr/lib64/cmake/Qt5Multimedia/Qt5Multimedia_AudioCaptureServicePlugin.cmake
+/usr/lib64/cmake/Qt5Multimedia/Qt5Multimedia_CameraBinServicePlugin.cmake
 /usr/lib64/cmake/Qt5Multimedia/Qt5Multimedia_QAlsaPlugin.cmake
+/usr/lib64/cmake/Qt5Multimedia/Qt5Multimedia_QGstreamerAudioDecoderServicePlugin.cmake
+/usr/lib64/cmake/Qt5Multimedia/Qt5Multimedia_QGstreamerCaptureServicePlugin.cmake
+/usr/lib64/cmake/Qt5Multimedia/Qt5Multimedia_QGstreamerPlayerServicePlugin.cmake
 /usr/lib64/cmake/Qt5Multimedia/Qt5Multimedia_QM3uPlaylistPlugin.cmake
 /usr/lib64/cmake/Qt5Multimedia/Qt5Multimedia_QPulseAudioPlugin.cmake
 /usr/lib64/cmake/Qt5MultimediaWidgets/Qt5MultimediaWidgetsConfig.cmake
@@ -469,6 +481,7 @@ rm -rf %{buildroot}
 /usr/lib64/libQt5XcbQpa.prl
 /usr/lib64/libQt5Xml.prl
 /usr/lib64/libQt5XmlPatterns.prl
+/usr/lib64/libqgsttools_p.prl
 /usr/mkspecs/aix-g++-64/qmake.conf
 /usr/mkspecs/aix-g++-64/qplatformdefs.h
 /usr/mkspecs/aix-g++/qmake.conf
@@ -1101,7 +1114,10 @@ rm -rf %{buildroot}
 /usr/plugins/imageformats/libqtiff.so
 /usr/plugins/imageformats/libqwbmp.so
 /usr/plugins/imageformats/libqwebp.so
-/usr/plugins/mediaservice/libqtmedia_audioengine.so
+/usr/plugins/mediaservice/libgstaudiodecoder.so
+/usr/plugins/mediaservice/libgstcamerabin.so
+/usr/plugins/mediaservice/libgstmediacapture.so
+/usr/plugins/mediaservice/libgstmediaplayer.so
 /usr/plugins/platforminputcontexts/libcomposeplatforminputcontextplugin.so
 /usr/plugins/platforminputcontexts/libibusplatforminputcontextplugin.so
 /usr/plugins/platforminputcontexts/libqtvirtualkeyboardplugin.so
@@ -9073,6 +9089,7 @@ rm -rf %{buildroot}
 /usr/lib64/libQt5XcbQpa.so
 /usr/lib64/libQt5Xml.so
 /usr/lib64/libQt5XmlPatterns.so
+/usr/lib64/libqgsttools_p.so
 /usr/lib64/pkgconfig/Qt53DAnimation.pc
 /usr/lib64/pkgconfig/Qt53DCore.pc
 /usr/lib64/pkgconfig/Qt53DExtras.pc
@@ -9323,3 +9340,6 @@ rm -rf %{buildroot}
 /usr/lib64/libQt5XmlPatterns.so.5
 /usr/lib64/libQt5XmlPatterns.so.5.9
 /usr/lib64/libQt5XmlPatterns.so.5.9.1
+/usr/lib64/libqgsttools_p.so.1
+/usr/lib64/libqgsttools_p.so.1.0
+/usr/lib64/libqgsttools_p.so.1.0.0
