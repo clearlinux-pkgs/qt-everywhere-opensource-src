@@ -4,7 +4,7 @@
 #
 Name     : qt-everywhere-opensource-src
 Version  : 5.9.3
-Release  : 9
+Release  : 10
 URL      : http://download.qt.io/official_releases/qt/5.9/5.9.3/single/qt-everywhere-opensource-src-5.9.3.tar.xz
 Source0  : http://download.qt.io/official_releases/qt/5.9/5.9.3/single/qt-everywhere-opensource-src-5.9.3.tar.xz
 Summary  : Ninja is a small build system with a focus on speed.
@@ -46,6 +46,7 @@ BuildRequires : libICE-dev
 BuildRequires : libSM-dev
 BuildRequires : libXcomposite-dev
 BuildRequires : libXrender-dev
+BuildRequires : libinput-dev
 BuildRequires : libjpeg-turbo-dev
 BuildRequires : libxcb-dev
 BuildRequires : libxkbcommon-dev
@@ -155,12 +156,12 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1511408033
+export SOURCE_DATE_EPOCH=1511797192
 %configure --disable-static -opensource -release -confirm-license -reduce-relocations -openssl  -system-sqlite -docdir /usr/share/doc -examplesdir /usr/share/doc/qt/examples -qt-xcb -v -no-compile-examples -nomake examples
 make  %{?_smp_mflags}
 
 %install
-export SOURCE_DATE_EPOCH=1511408033
+export SOURCE_DATE_EPOCH=1511797192
 rm -rf %{buildroot}
 %make_install
 
@@ -241,6 +242,7 @@ rm -rf %{buildroot}
 /usr/lib64/cmake/Qt5Gui/Qt5Gui_QICOPlugin.cmake
 /usr/lib64/cmake/Qt5Gui/Qt5Gui_QIbusPlatformInputContextPlugin.cmake
 /usr/lib64/cmake/Qt5Gui/Qt5Gui_QJpegPlugin.cmake
+/usr/lib64/cmake/Qt5Gui/Qt5Gui_QLibInputPlugin.cmake
 /usr/lib64/cmake/Qt5Gui/Qt5Gui_QLinuxFbIntegrationPlugin.cmake
 /usr/lib64/cmake/Qt5Gui/Qt5Gui_QMinimalEglIntegrationPlugin.cmake
 /usr/lib64/cmake/Qt5Gui/Qt5Gui_QMinimalIntegrationPlugin.cmake
@@ -1096,6 +1098,7 @@ rm -rf %{buildroot}
 /usr/plugins/generic/libqevdevmouseplugin.so
 /usr/plugins/generic/libqevdevtabletplugin.so
 /usr/plugins/generic/libqevdevtouchplugin.so
+/usr/plugins/generic/libqlibinputplugin.so
 /usr/plugins/generic/libqtuiotouchplugin.so
 /usr/plugins/geometryloaders/libdefaultgeometryloader.so
 /usr/plugins/geometryloaders/libgltfgeometryloader.so

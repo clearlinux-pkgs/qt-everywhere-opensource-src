@@ -32,6 +32,7 @@ libharfbuzz.so.0
 libicudata.so.55
 libicui18n.so.55
 libicuuc.so.55
+libinput.so.10
 libjpeg.so.62
 libm.so.6
 libpng16.so.16

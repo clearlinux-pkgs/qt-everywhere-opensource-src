@@ -31,3 +31,4 @@ double-conversion-dev
 libICE-dev
 libSM-dev
 gst-plugins-base-dev
+libinput-dev
