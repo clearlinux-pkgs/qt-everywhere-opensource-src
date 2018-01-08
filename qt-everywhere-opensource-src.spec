@@ -4,31 +4,22 @@
 #
 Name     : qt-everywhere-opensource-src
 Version  : 5.9.3
-Release  : 10
+Release  : 11
 URL      : http://download.qt.io/official_releases/qt/5.9/5.9.3/single/qt-everywhere-opensource-src-5.9.3.tar.xz
 Source0  : http://download.qt.io/official_releases/qt/5.9/5.9.3/single/qt-everywhere-opensource-src-5.9.3.tar.xz
 Summary  : Ninja is a small build system with a focus on speed.
 Group    : Development/Tools
-License  : AFL-2.0 APSL-2.0 Apache-2.0 BSD-2-Clause BSD-3-Clause BSD-3-Clause-Clear BSL-1.0 CC0-1.0 FTL GFDL-1.2 GFDL-1.3 GPL-2.0 GPL-3.0 HPND ICU IJG ISC JasPer-2.0 LGPL-2.0 LGPL-2.1 LGPL-3.0 Libpng MIT MPL-1.1 MPL-2.0-no-copyleft-exception NCSA NTP OFL-1.0 OFL-1.1 OpenSSL SGI-B-2.0 Unlicense W3C Zlib bzip2-1.0.6 libtiff
+License  : AFL-2.0 APSL-2.0 Apache-2.0 BSD-2-Clause BSD-3-Clause BSD-3-Clause-Clear BSL-1.0 CC-BY-4.0 CC0-1.0 FTL GFDL-1.2 GFDL-1.3 GPL-2.0 GPL-3.0 HPND ICU IJG ISC JasPer-2.0 LGPL-2.0 LGPL-2.1 LGPL-3.0 Libpng MIT MIT-feh MPL-1.1 MPL-2.0-no-copyleft-exception NCSA NTP OFL-1.0 OFL-1.1 OpenSSL SGI-B-2.0 Unlicense W3C Zlib bzip2-1.0.6 libtiff
 Requires: qt-everywhere-opensource-src-bin
 Requires: qt-everywhere-opensource-src-lib
 Requires: qt-everywhere-opensource-src-data
-Requires: Sphinx
-Requires: coverage
 Requires: dnspython
-Requires: enum34
-Requires: futures
-Requires: nose
 Requires: protobuf
-Requires: pyOpenSSL
-Requires: pylint
-Requires: python-gflags
-Requires: python-mock
 Requires: setuptools
 Requires: six
-Requires: tox
-Requires: wheel
 BuildRequires : alsa-lib-dev
+BuildRequires : at-spi2-atk-dev
+BuildRequires : at-spi2-core-dev
 BuildRequires : bluez-dev
 BuildRequires : cmake
 BuildRequires : cups-dev
@@ -36,22 +27,31 @@ BuildRequires : dbus-dev
 BuildRequires : dnspython
 BuildRequires : double-conversion-dev
 BuildRequires : fontconfig-dev
+BuildRequires : glibc-utils
 BuildRequires : go
 BuildRequires : grep
 BuildRequires : gst-plugins-base-dev
 BuildRequires : gstreamer-dev
+BuildRequires : gtk3-dev
 BuildRequires : harfbuzz-dev
 BuildRequires : icu4c-dev
+BuildRequires : inputproto-dev
 BuildRequires : libICE-dev
 BuildRequires : libSM-dev
 BuildRequires : libXcomposite-dev
 BuildRequires : libXrender-dev
 BuildRequires : libinput-dev
 BuildRequires : libjpeg-turbo-dev
+BuildRequires : libvpx-dev
+BuildRequires : libwebp-dev
 BuildRequires : libxcb-dev
 BuildRequires : libxkbcommon-dev
 BuildRequires : libxkbfile-dev
+BuildRequires : mariadb-dev
+BuildRequires : ninja
 BuildRequires : openssl-dev
+BuildRequires : opus-dev
+BuildRequires : pacrunner-dev
 BuildRequires : pbr
 BuildRequires : pcre-dev
 BuildRequires : pcre2-dev
@@ -156,12 +156,12 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1511797192
+export SOURCE_DATE_EPOCH=1515375084
 %configure --disable-static -opensource -release -confirm-license -reduce-relocations -openssl  -system-sqlite -docdir /usr/share/doc -examplesdir /usr/share/doc/qt/examples -qt-xcb -v -no-compile-examples -nomake examples
 make  %{?_smp_mflags}
 
 %install
-export SOURCE_DATE_EPOCH=1511797192
+export SOURCE_DATE_EPOCH=1515375084
 rm -rf %{buildroot}
 %make_install
 
@@ -238,6 +238,7 @@ rm -rf %{buildroot}
 /usr/lib64/cmake/Qt5Gui/Qt5Gui_QEvdevTabletPlugin.cmake
 /usr/lib64/cmake/Qt5Gui/Qt5Gui_QEvdevTouchScreenPlugin.cmake
 /usr/lib64/cmake/Qt5Gui/Qt5Gui_QGifPlugin.cmake
+/usr/lib64/cmake/Qt5Gui/Qt5Gui_QGtk3ThemePlugin.cmake
 /usr/lib64/cmake/Qt5Gui/Qt5Gui_QICNSPlugin.cmake
 /usr/lib64/cmake/Qt5Gui/Qt5Gui_QICOPlugin.cmake
 /usr/lib64/cmake/Qt5Gui/Qt5Gui_QIbusPlatformInputContextPlugin.cmake
@@ -359,6 +360,7 @@ rm -rf %{buildroot}
 /usr/lib64/cmake/Qt5SerialPort/Qt5SerialPortConfigVersion.cmake
 /usr/lib64/cmake/Qt5Sql/Qt5SqlConfig.cmake
 /usr/lib64/cmake/Qt5Sql/Qt5SqlConfigVersion.cmake
+/usr/lib64/cmake/Qt5Sql/Qt5Sql_QMYSQLDriverPlugin.cmake
 /usr/lib64/cmake/Qt5Sql/Qt5Sql_QSQLiteDriverPlugin.cmake
 /usr/lib64/cmake/Qt5Svg/Qt5SvgConfig.cmake
 /usr/lib64/cmake/Qt5Svg/Qt5SvgConfigVersion.cmake
@@ -436,6 +438,7 @@ rm -rf %{buildroot}
 /usr/lib64/libQt5Help.prl
 /usr/lib64/libQt5InputSupport.prl
 /usr/lib64/libQt5KmsSupport.prl
+/usr/lib64/libQt5LinuxAccessibilitySupport.prl
 /usr/lib64/libQt5Location.prl
 /usr/lib64/libQt5Multimedia.prl
 /usr/lib64/libQt5MultimediaQuick_p.prl
@@ -930,6 +933,7 @@ rm -rf %{buildroot}
 /usr/mkspecs/modules/qt_lib_help_private.pri
 /usr/mkspecs/modules/qt_lib_input_support_private.pri
 /usr/mkspecs/modules/qt_lib_kms_support_private.pri
+/usr/mkspecs/modules/qt_lib_linuxaccessibility_support_private.pri
 /usr/mkspecs/modules/qt_lib_location.pri
 /usr/mkspecs/modules/qt_lib_location_private.pri
 /usr/mkspecs/modules/qt_lib_multimedia.pri
@@ -1136,6 +1140,7 @@ rm -rf %{buildroot}
 /usr/plugins/platforms/libqwayland-xcomposite-egl.so
 /usr/plugins/platforms/libqwayland-xcomposite-glx.so
 /usr/plugins/platforms/libqxcb.so
+/usr/plugins/platformthemes/libqgtk3.so
 /usr/plugins/playlistformats/libqtmultimedia_m3u.so
 /usr/plugins/position/libqtposition_geoclue.so
 /usr/plugins/position/libqtposition_positionpoll.so
@@ -1160,6 +1165,7 @@ rm -rf %{buildroot}
 /usr/plugins/sensors/libqtsensors_iio-sensor-proxy.so
 /usr/plugins/sensors/libqtsensors_linuxsys.so
 /usr/plugins/sqldrivers/libqsqlite.so
+/usr/plugins/sqldrivers/libqsqlmysql.so
 /usr/plugins/wayland-decoration-client/libbradient.so
 /usr/plugins/wayland-graphics-integration-client/libdrm-egl-server.so
 /usr/plugins/wayland-graphics-integration-client/libwayland-egl.so
@@ -5577,6 +5583,17 @@ rm -rf %{buildroot}
 /usr/include/QtKmsSupport/QtKmsSupportDepends
 /usr/include/QtKmsSupport/QtKmsSupportVersion
 /usr/include/QtKmsSupport/qtkmssupportversion.h
+/usr/include/QtLinuxAccessibilitySupport/5.9.3/QtLinuxAccessibilitySupport/private/application_p.h
+/usr/include/QtLinuxAccessibilitySupport/5.9.3/QtLinuxAccessibilitySupport/private/atspiadaptor_p.h
+/usr/include/QtLinuxAccessibilitySupport/5.9.3/QtLinuxAccessibilitySupport/private/bridge_p.h
+/usr/include/QtLinuxAccessibilitySupport/5.9.3/QtLinuxAccessibilitySupport/private/cache_p.h
+/usr/include/QtLinuxAccessibilitySupport/5.9.3/QtLinuxAccessibilitySupport/private/constant_mappings_p.h
+/usr/include/QtLinuxAccessibilitySupport/5.9.3/QtLinuxAccessibilitySupport/private/dbusconnection_p.h
+/usr/include/QtLinuxAccessibilitySupport/5.9.3/QtLinuxAccessibilitySupport/private/struct_marshallers_p.h
+/usr/include/QtLinuxAccessibilitySupport/QtLinuxAccessibilitySupport
+/usr/include/QtLinuxAccessibilitySupport/QtLinuxAccessibilitySupportDepends
+/usr/include/QtLinuxAccessibilitySupport/QtLinuxAccessibilitySupportVersion
+/usr/include/QtLinuxAccessibilitySupport/qtlinuxaccessibilitysupportversion.h
 /usr/include/QtLocation/5.9.3/QtLocation/private/error_messages_p.h
 /usr/include/QtLocation/5.9.3/QtLocation/private/locationvaluetypehelper_p.h
 /usr/include/QtLocation/5.9.3/QtLocation/private/mapitemviewdelegateincubator_p.h

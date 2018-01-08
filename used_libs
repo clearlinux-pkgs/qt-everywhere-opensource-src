@@ -7,9 +7,13 @@ libX11-xcb.so.1
 libX11.so.6
 libXcomposite.so.1
 libXext.so.6
+libXi.so.6
 libasound.so.2
+libatk-1.0.so.0
 libbluetooth.so.3
 libc.so.6
+libcairo-gobject.so.2
+libcairo.so.2
 libcups.so.2
 libdbus-1.so.3
 libdl.so.2
@@ -19,6 +23,9 @@ libfontconfig.so.1
 libfreetype.so.6
 libgbm.so.1
 libgcc_s.so.1
+libgdk-3.so.0
+libgdk_pixbuf-2.0.so.0
+libgio-2.0.so.0
 libglib-2.0.so.0
 libgobject-2.0.so.0
 libgstapp-1.0.so.0
@@ -28,6 +35,7 @@ libgstpbutils-1.0.so.0
 libgstreamer-1.0.so.0
 libgstvideo-1.0.so.0
 libgthread-2.0.so.0
+libgtk-3.so.0
 libharfbuzz.so.0
 libicudata.so.55
 libicui18n.so.55
@@ -35,6 +43,9 @@ libicuuc.so.55
 libinput.so.10
 libjpeg.so.62
 libm.so.6
+libmysqlclient.so.18
+libpango-1.0.so.0
+libpangocairo-1.0.so.0
 libpng16.so.16
 libpthread.so.0
 libpulse-mainloop-glib.so.0
