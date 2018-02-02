@@ -4,7 +4,7 @@
 #
 Name     : qt-everywhere-opensource-src
 Version  : 5.9.3
-Release  : 12
+Release  : 13
 URL      : http://download.qt.io/official_releases/qt/5.9/5.9.3/single/qt-everywhere-opensource-src-5.9.3.tar.xz
 Source0  : http://download.qt.io/official_releases/qt/5.9/5.9.3/single/qt-everywhere-opensource-src-5.9.3.tar.xz
 Summary  : Ninja is a small build system with a focus on speed.
